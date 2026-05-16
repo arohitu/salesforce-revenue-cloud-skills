@@ -41,7 +41,7 @@ This folder is designed to be copied into any project or agent skill directory.
 ### Option 1: Clone The Kit
 
 ```bash
-git clone https://github.com/YOUR-ORG/salesforce-revenue-cloud-skills.git
+git clone https://github.com/arohitu/salesforce-revenue-cloud-skills.git
 ```
 
 Then copy the skill folder into the location your agent uses for skills.
