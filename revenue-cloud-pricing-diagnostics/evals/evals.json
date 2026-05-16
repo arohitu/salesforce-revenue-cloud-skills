@@ -3,7 +3,7 @@
   "evals": [
     {
       "id": "trace-quote-total-field",
-      "prompt": "In this Salesforce Revenue Cloud repo, explain how Quote.RCA_TotalACVAmount__c is populated by pricing. Trace it through context mapping, expression set steps, and persistence.",
+      "prompt": "In this Salesforce Revenue Cloud repo, explain how Quote.RCA_TotalMRRAmount__c is populated by pricing. Trace it through context mapping, expression set steps, and persistence.",
       "expected_output": "A pricing lineage report that identifies the Quote field, matching context attribute/tag, context mapping, expression set or aggregation step, procedure-plan context if available, and the writeback path.",
       "assertions": [
         "The output uses Revenue Cloud context definitions and mappings rather than SBQQ or Salesforce CPQ constructs.",

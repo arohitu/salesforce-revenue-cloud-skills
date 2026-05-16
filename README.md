@@ -76,7 +76,7 @@ Once installed, ask your agent Revenue Cloud pricing questions in natural langua
 Example prompts:
 
 ```text
-Help me understand how Quote.RCA_TotalACVAmount__c is populated by Revenue Cloud pricing.
+Help me understand how Quote.RCA_TotalMRRAmount__c is populated by Revenue Cloud pricing.
 ```
 
 ```text
