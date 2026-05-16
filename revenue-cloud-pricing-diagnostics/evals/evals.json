@@ -1,0 +1,64 @@
+{
+  "skill_name": "revenue-cloud-pricing-diagnostics",
+  "evals": [
+    {
+      "id": "trace-quote-total-field",
+      "prompt": "In this Salesforce Revenue Cloud repo, explain how Quote.RCA_TotalACVAmount__c is populated by pricing. Trace it through context mapping, expression set steps, and persistence.",
+      "expected_output": "A pricing lineage report that identifies the Quote field, matching context attribute/tag, context mapping, expression set or aggregation step, procedure-plan context if available, and the writeback path.",
+      "assertions": [
+        "The output uses Revenue Cloud context definitions and mappings rather than SBQQ or Salesforce CPQ constructs.",
+        "The output identifies a context attribute or tag related to TotalACVAmount__c.",
+        "The output looks for expression set steps or aggregation outputs that populate the value.",
+        "The output includes a persistence or save mapping check.",
+        "The output separates evidence from unknowns or next checks."
+      ]
+    },
+    {
+      "id": "explain-exchange-rate-field",
+      "prompt": "How is the budget exchange rate field on Quote populated in Revenue Cloud pricing, and how can I prove which decision table provides it?",
+      "expected_output": "An explanation of field lineage from Quote field to context tag to decision-table lookup, including lookup inputs/outputs and where the returned value is reused by formulas.",
+      "assertions": [
+        "The output traces object field to context attribute/tag before discussing pricing logic.",
+        "The output identifies a decision-table lookup as the expected source.",
+        "The output checks input parameters and output parameters instead of assuming the table is correct.",
+        "The output explains how dependent formulas can reuse the returned exchange rate.",
+        "The output mentions active metadata or org verification if source metadata is incomplete."
+      ]
+    },
+    {
+      "id": "duplicate-lookup-api-failure",
+      "prompt": "A quote prices fine in the UI but the Place Sales Transaction API fails with DUPLICATE_VALUE_FOUND_IN_LOOKUP. The decision table appears to have matching rows. What should I check?",
+      "expected_output": "A diagnostic checklist focused on runtime context preparation, incomplete lookup keys, attribute flattening, picklist value resolution, Apex pre-hooks, and decision-table input validation.",
+      "assertions": [
+        "The output does not assume the root cause is duplicate decision-table data only.",
+        "The output tells the user to validate runtime pricing context, not just the API payload.",
+        "The output mentions incomplete lookup keys as a possible cause.",
+        "The output includes UI versus API context-preparation differences.",
+        "The output includes Apex pre-hook or attribute-flattening checks."
+      ]
+    },
+    {
+      "id": "procedure-plan-sequence",
+      "prompt": "I found several pricing procedures and an Apex class in a Revenue Cloud org. How do I determine which one runs first and which procedure writes the final totals?",
+      "expected_output": "A procedure-plan analysis workflow that queries active plan definitions, versions, sections, and options, then explains sequence, priority, read/save mappings, and totals procedure placement.",
+      "assertions": [
+        "The output explains procedure plan sections and options.",
+        "The output includes active version and sequence checks.",
+        "The output includes option priority and read/save context mapping checks.",
+        "The output distinguishes Apex hooks from pricing procedures.",
+        "The output says org queries may be required when deployable metadata is missing."
+      ]
+    },
+    {
+      "id": "cpq-boundary",
+      "prompt": "Can you trace how SBQQ__NetPrice__c is calculated on SBQQ__QuoteLine__c using this Revenue Cloud skill?",
+      "expected_output": "A boundary response that explains this is Salesforce CPQ/SBQQ, not core Revenue Cloud pricing, and that a CPQ-specific diagnostic approach is needed.",
+      "assertions": [
+        "The output recognizes SBQQ__NetPrice__c and SBQQ__QuoteLine__c as Salesforce CPQ constructs.",
+        "The output does not try to apply Revenue Cloud context definitions or expression sets to SBQQ metadata.",
+        "The output clearly states that this skill is not the right diagnostic model for the request.",
+        "The output suggests switching to CPQ-specific analysis."
+      ]
+    }
+  ]
+}
