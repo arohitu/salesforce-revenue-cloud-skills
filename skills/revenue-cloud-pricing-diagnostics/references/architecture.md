@@ -1,6 +1,6 @@
 # Revenue Cloud Pricing Architecture
 
-Salesforce Revenue Cloud pricing is context-driven. Pricing procedures do not operate directly on Salesforce object fields. They operate on a canonical context model that is hydrated from objects, transformed by expression sets, and persisted back through mappings.
+Salesforce Revenue Cloud pricing for Agentforce Revenue Management, Revenue Cloud Advanced, and Revenue Cloud Billing is context-driven and built on core Salesforce objects. Pricing procedures do not operate directly on Salesforce object fields. They operate on a canonical context model that is hydrated from objects, transformed by expression sets, and persisted back through mappings.
 
 ## Core Model
 
@@ -26,9 +26,9 @@ sObject fields
 - Procedure plans orchestrate one or more expression sets and Apex hooks in a sequence.
 - Apex hooks can prepare or finalize context. In Revenue Cloud procedure plans, Apex logic is commonly used as a pre-hook or post-hook rather than embedded throughout pricing.
 
-## Revenue Cloud Is Not Salesforce CPQ
+## Revenue Cloud Is Not Legacy CPQ Or Billing
 
-Salesforce CPQ / Steelbrick CPQ uses managed-package constructs such as `SBQQ__QuoteLine__c`, price rules, product rules, discount schedules, and quote calculator plugins. Revenue Cloud core uses standard and custom objects, context definitions, mappings, expression sets, decision tables, and procedure plans. Do not assume `SBQQ__` namespace metadata exists.
+Legacy Salesforce CPQ / Steelbrick CPQ uses managed-package constructs such as `SBQQ__QuoteLine__c`, price rules, product rules, discount schedules, and quote calculator plugins. Legacy Salesforce Billing uses managed-package `BLNG__*` constructs. New Salesforce Revenue Cloud uses standard and custom core objects, context definitions, mappings, expression sets, decision tables, and procedure plans. Do not assume `SBQQ__` or `BLNG__` namespace metadata is part of the Revenue Cloud pricing path.
 
 ## Naming Pattern
 

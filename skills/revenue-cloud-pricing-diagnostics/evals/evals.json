@@ -59,6 +59,17 @@
         "The output clearly states that this skill is not the right diagnostic model for the request.",
         "The output suggests switching to CPQ-specific analysis."
       ]
+    },
+    {
+      "id": "billing-boundary",
+      "prompt": "Can you use this Revenue Cloud pricing skill to explain how BLNG__InvoiceLine__c amounts are calculated in our old Salesforce Billing package?",
+      "expected_output": "A boundary response that explains BLNG__* objects belong to legacy managed-package Salesforce Billing, not the new core Salesforce Revenue Cloud pricing model, and that Billing-package-specific analysis is needed.",
+      "assertions": [
+        "The output recognizes BLNG__InvoiceLine__c as a legacy Salesforce Billing managed-package construct.",
+        "The output does not try to apply Revenue Cloud context definitions or expression sets to BLNG metadata.",
+        "The output clearly states that this skill is not the right diagnostic model for the request.",
+        "The output suggests switching to Salesforce Billing managed-package analysis."
+      ]
     }
   ]
 }

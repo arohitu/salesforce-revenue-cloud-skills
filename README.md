@@ -22,7 +22,7 @@ This lets agents keep domain expertise available without loading every detail in
 
 Path: `skills/revenue-cloud-pricing-diagnostics/`
 
-Use this skill when you want an agent to inspect Salesforce Revenue Cloud pricing in a core Revenue Cloud org, especially when tracing:
+Use this skill when you want an agent to inspect pricing in Salesforce Revenue Cloud, Agentforce Revenue Management, Revenue Cloud Advanced, or Revenue Cloud Billing implementations built on core Salesforce objects, especially when tracing:
 
 - How a Quote, Quote Line, Order, or pricing field is populated.
 - Which context definition, context mapping, or context tag feeds a value.
@@ -30,7 +30,7 @@ Use this skill when you want an agent to inspect Salesforce Revenue Cloud pricin
 - Which procedure plan or Apex pre-hook affects pricing sequence.
 - Why pricing differs between UI and API flows.
 
-This skill is for Salesforce Revenue Cloud / Agentforce Revenue Management. It is not intended for Salesforce CPQ / Steelbrick CPQ `SBQQ__*` analysis.
+This skill is for the new core Salesforce Revenue Cloud product family. It is not intended for legacy managed-package Salesforce CPQ / Steelbrick CPQ `SBQQ__*` or legacy Salesforce Billing `BLNG__*` analysis.
 
 ### Revenue Cloud Product Catalog Management (PCM)
 
@@ -124,6 +124,12 @@ Create a migration plan for moving a PCM catalog and its bundle products between
 For pricing diagnostics, the agent should produce a concise lineage report showing the object field, context attribute/tag, context mapping, expression set or pricing step, decision table or formula, procedure-plan sequence, writeback path, and likely failure points.
 
 For PCM work, the agent should ground recommendations in the relevant core objects, relationships, effective dates, qualification rules, bundle structure, migration load order, and org/API-version constraints.
+
+## Skill Quality Notes
+
+Each skill follows the open Agent Skills structure: a root `SKILL.md` with `name` and `description` frontmatter, concise activation instructions, and supporting files loaded only when needed.
+
+For pricing diagnostics, `SKILL.md` stays focused on the default workflow, reference selection, gotchas, output template, and the legacy managed-package CPQ/Billing boundary. Deeper Revenue Cloud details live in `references/`, and quality scenarios live in `evals/evals.json`.
 
 ## Repository Structure
 
