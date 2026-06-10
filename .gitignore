@@ -1,1 +1,10 @@
 /.build-skill
+node_modules/
+.tmp-test-project/
+.tmp-test-home/
+.agent/
+.DS_Store
+*.tgz
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
