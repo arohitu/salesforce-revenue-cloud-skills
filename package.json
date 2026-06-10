@@ -1,0 +1,35 @@
+{
+  "name": "rcaskills",
+  "version": "1.0.0",
+  "description": "Install agent skills from GitHub repositories into .agent/skills",
+  "type": "module",
+  "bin": {
+    "rcaskills": "./bin/rcaskills.js"
+  },
+  "scripts": {
+    "start": "node bin/rcaskills.js",
+    "test:cli:list": "node bin/rcaskills.js add arohitu/salesforce-revenue-cloud-skills --list"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "agent-skills",
+    "cursor",
+    "installer",
+    "npx"
+  ],
+  "author": "Rohit Radhakrishnan",
+  "license": "MIT",
+  "dependencies": {
+    "@inquirer/prompts": "^7.10.1",
+    "commander": "^14.0.0",
+    "tar": "^7.4.3"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

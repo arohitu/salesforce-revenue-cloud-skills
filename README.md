@@ -50,7 +50,33 @@ This skill is for core Salesforce Revenue Cloud / Agentforce Revenue Management 
 
 This folder is designed to be copied into any project or agent skill directory.
 
-### Option 1: Clone The Kit
+### Option 1: Install With npx (Recommended)
+
+Use the `rcaskills` CLI to install from GitHub:
+
+```bash
+# Install all skills (interactive location prompt)
+npx rcaskills add arohitu/salesforce-revenue-cloud-skills
+```
+
+```bash
+# Install specific skills only
+npx rcaskills add arohitu/salesforce-revenue-cloud-skills --skill revenue-cloud-pcm revenue-cloud-pricing-diagnostics
+```
+
+```bash
+# List available skills in the repository
+npx rcaskills add arohitu/salesforce-revenue-cloud-skills --list
+```
+
+Behavior:
+
+- Prompts for install target: project `./.agent/skills` or global `~/.agent/skills`.
+- Creates `.agent/skills` if missing.
+- Interactive multi-select supports arrow keys to navigate, spacebar to select, and enter to install.
+- Defaults to all skills selected when `--skill` is not provided.
+
+### Option 2: Clone The Kit
 
 ```bash
 git clone https://github.com/arohitu/salesforce-revenue-cloud-skills.git
@@ -67,7 +93,7 @@ For Cursor, a project-local skill can live under:
 
 For agents that use the open Agent Skills format, copy the folder into that agent's configured skills directory.
 
-### Option 2: Add To An Existing Project
+### Option 3: Add To An Existing Project
 
 From your project root:
 
@@ -79,7 +105,7 @@ cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-pcm .cursor/
 
 Restart or refresh your agent session, then ask the agent to list available skills if your client supports that command.
 
-### Option 3: Use As A Standalone Repo
+### Option 4: Use As A Standalone Repo
 
 You can also keep `salesforce-revenue-cloud-skills/` as its own repository and copy or symlink individual skill folders into projects where Revenue Cloud expertise is needed.
 
