@@ -2,6 +2,16 @@
 
 Use this reference when tracing an expression set step, pricing element, formula, lookup, or aggregation.
 
+## Contents
+
+- Pricing elements
+- Decision table shape
+- Lookup trace
+- Querying and invoking decision tables
+- Duplicate or wrong lookup results
+- Formula and aggregation trace
+- Evidence to include
+
 ## Pricing Elements
 
 Pricing elements are the executable steps inside expression sets. Common elements include:
