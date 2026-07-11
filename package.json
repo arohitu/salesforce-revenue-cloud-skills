@@ -1,10 +1,10 @@
 {
   "name": "rcaskills",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Install agent skills from GitHub repositories into .agent/skills",
   "type": "module",
   "bin": {
-    "rcaskills": "./bin/rcaskills.js"
+    "rcaskills": "bin/rcaskills.js"
   },
   "scripts": {
     "start": "node bin/rcaskills.js",

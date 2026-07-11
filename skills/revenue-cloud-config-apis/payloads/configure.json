@@ -1,0 +1,13 @@
+{
+  "transactionLineId": "0QLDE000000IBXw4AO",
+  "transactionId": "0Q0xx0000000001GAA",
+  "correlationId": "c95246d4-102c-4ecd-a263-f74ac525d1e5",
+  "configuratorOptions": {
+    "executePricing": true,
+    "returnProductCatalogData": true
+  },
+  "qualificationContext": {
+    "accountId": "001xx0000000001AAA",
+    "contactId": "003xx00000000D7AAI"
+  }
+}

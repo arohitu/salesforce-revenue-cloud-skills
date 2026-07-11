@@ -1,0 +1,18 @@
+{
+  "configuratorOptions": {
+    "executePricing": true,
+    "returnProductCatalogData": true,
+    "qualifyAllProductsInTransaction": true,
+    "validateProductCatalog": true,
+    "validateAmendRenewCancel": true,
+    "executeConfigurationRules": true,
+    "addDefaultConfiguration": true
+  },
+  "qualificationContext": {
+    "accountId": "001xx0000000001AAA",
+    "contactId": "003xx00000000D7AAI"
+  },
+  "contextId": "008d27d7-e004-4906-a949-ee7d7c323c77",
+  "quantity": 20,
+  "transactionLinePath": "Quote.QuoteLineItem.Quantity"
+}
