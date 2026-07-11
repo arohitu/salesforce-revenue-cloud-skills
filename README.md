@@ -2,7 +2,7 @@
 
 An open-source kit of Agent Skills for Salesforce Revenue Cloud architects, developers, consultants, and implementation teams.
 
-These skills help agents work across core Salesforce Revenue Cloud topics, including pricing diagnostics and Product Catalog Management (PCM) master data.
+These skills help agents work across core Salesforce Revenue Cloud topics, including pricing diagnostics, Product Catalog Management (PCM) master data, Product Configurator Business APIs, and Decision Table lookups.
 
 ## What Are Agent Skills?
 
@@ -46,6 +46,44 @@ Use this skill when you want an agent to design, inspect, troubleshoot, export, 
 
 This skill is for core Salesforce Revenue Cloud / Agentforce Revenue Management / Revenue Cloud Advanced / Revenue Cloud Billing PCM objects such as `Product2`, `ProductCatalog`, `ProductCategory`, `ProductClassification`, and `ProductRelatedComponent`. It is not intended for legacy Salesforce CPQ `SBQQ__*` or legacy Salesforce Billing `BLNG__*` managed-package patterns unless explicitly requested.
 
+### Revenue Cloud Product Configurator Business APIs
+
+Path: `skills/revenue-cloud-config-apis/`
+
+Use this skill when you want an agent to reference or call the Salesforce Revenue Cloud (Revenue Lifecycle Management) Product Configurator Connect REST resources, especially involving:
+
+- Configuring a product bundle and running configuration rules.
+- Loading, getting, setting, or saving a configuration instance.
+- Adding, updating, or deleting configuration nodes.
+- Setting product quantity through the runtime system.
+- Executing configurator rules for a quote or order via `contextId` or `transactionId`.
+
+The skill bundles sample payloads and a `call-configurator-apis.sh` script that authenticates through the Salesforce CLI and POSTs to all ten configurator resources. Minimum API version is v67.0.
+
+### Revenue Cloud Decision Table
+
+Path: `skills/revenue-cloud-decision-table/`
+
+Use this skill when you want an agent to find, inspect, invoke, or debug Salesforce Revenue Cloud Decision Tables, especially involving:
+
+- Locating a Decision Table Id from a name, developer name, or pricing component.
+- Discovering required input fields and building `conditionsList` payloads.
+- Invoking the Connect REST decision-table lookup API.
+- Validating pricing lookup outcomes or debugging `datasetLinkName` and auth issues.
+
+### Salesforce Revenue Cloud Pricing
+
+Path: `skills/salesforce-revenue-cloud-pricing/`
+
+Use this skill when you want an agent to design, implement, debug, or explain Salesforce Revenue Cloud pricing logic, especially involving:
+
+- Pricing procedures, pricing recipes, and procedure plans.
+- Decision tables, price adjustment schedules, and Apex pricing hooks.
+- Product discovery pricing, headless pricing APIs, and quote/order runtime pricing.
+- Price Waterfall, Revenue Cloud Operations Console logs, and unexpected pricing results.
+
+For field-level lineage in an existing implementation, pair this skill with `revenue-cloud-pricing-diagnostics`.
+
 ## Installation
 
 This folder is designed to be copied into any project or agent skill directory.
@@ -61,7 +99,7 @@ npx rcaskills add arohitu/salesforce-revenue-cloud-skills
 
 ```bash
 # Install specific skills only
-npx rcaskills add arohitu/salesforce-revenue-cloud-skills --skill revenue-cloud-pcm revenue-cloud-pricing-diagnostics
+npx rcaskills add arohitu/salesforce-revenue-cloud-skills --skill revenue-cloud-config-apis revenue-cloud-decision-table revenue-cloud-pcm revenue-cloud-pricing-diagnostics salesforce-revenue-cloud-pricing
 ```
 
 ```bash
@@ -87,8 +125,11 @@ Then copy the skill folder into the location your agent uses for skills.
 For Cursor, a project-local skill can live under:
 
 ```text
+.cursor/skills/revenue-cloud-config-apis/
+.cursor/skills/revenue-cloud-decision-table/
 .cursor/skills/revenue-cloud-pricing-diagnostics/
 .cursor/skills/revenue-cloud-pcm/
+.cursor/skills/salesforce-revenue-cloud-pricing/
 ```
 
 For agents that use the open Agent Skills format, copy the folder into that agent's configured skills directory.
@@ -99,8 +140,11 @@ From your project root:
 
 ```bash
 mkdir -p .cursor/skills
+cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-config-apis .cursor/skills/
+cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-decision-table .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-pricing-diagnostics .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-pcm .cursor/skills/
+cp -R /path/to/salesforce-revenue-cloud-skills/skills/salesforce-revenue-cloud-pricing .cursor/skills/
 ```
 
 Restart or refresh your agent session, then ask the agent to list available skills if your client supports that command.
@@ -147,9 +191,31 @@ Why is this product missing from Browse Catalogs? Check catalog/category links, 
 Create a migration plan for moving a PCM catalog and its bundle products between Salesforce orgs.
 ```
 
+```text
+Call the Revenue Cloud Product Configurator APIs to load a configuration instance for this quote and then add nodes to the bundle.
+```
+
+```text
+Dry-run the bundled configurator API script against my org and show me the URLs for configure and load-instance.
+```
+
+```text
+Find the Decision Table used for volume discounting and invoke it with the quote's product and quantity inputs.
+```
+
+```text
+Help me design a pricing procedure for product discovery list prices using decision tables and a pricing recipe.
+```
+
 For pricing diagnostics, the agent should produce a concise lineage report showing the object field, context attribute/tag, context mapping, expression set or pricing step, decision table or formula, procedure-plan sequence, writeback path, and likely failure points.
 
 For PCM work, the agent should ground recommendations in the relevant core objects, relationships, effective dates, qualification rules, bundle structure, migration load order, and org/API-version constraints.
+
+For Product Configurator API work, the agent should use the bundled payloads and script, respect the v67.0 minimum API version, and distinguish `transactionId` from `contextId` when calling load, configure, node, quantity, and rules resources.
+
+For Decision Table work, the agent should identify the table Id, build a valid `conditionsList` payload, invoke the lookup API, and report `outcomeList` values and errors.
+
+For pricing design and debugging, the agent should identify the pricing surface, map the path from context to result, and use simulation or Price Waterfall when validating behavior.
 
 ## Skill Quality Notes
 
@@ -162,28 +228,38 @@ For pricing diagnostics, `SKILL.md` stays focused on the default workflow, refer
 ```text
 .
 ├── skills/
+│   ├── revenue-cloud-config-apis/
+│   │   ├── SKILL.md
+│   │   ├── references/
+│   │   │   └── resources.md
+│   │   ├── payloads/
+│   │   │   ├── configure.json
+│   │   │   ├── load-instance.json
+│   │   │   └── ...
+│   │   └── scripts/
+│   │       └── call-configurator-apis.sh
+│   ├── revenue-cloud-decision-table/
+│   │   ├── SKILL.md
+│   │   └── scripts/
+│   │       ├── find-decision-table.sh
+│   │       ├── inspect-decision-table-inputs.sh
+│   │       └── invoke-decision-table.sh
 │   ├── revenue-cloud-pricing-diagnostics/
 │   │   ├── SKILL.md
 │   │   ├── references/
-│   │   │   ├── architecture.md
-│   │   │   ├── field-lineage-workflow.md
-│   │   │   ├── procedure-plans.md
-│   │   │   ├── pricing-elements-and-decision-tables.md
-│   │   │   └── troubleshooting.md
 │   │   └── evals/
-│   │       └── evals.json
-│   └── revenue-cloud-pcm/
+│   ├── revenue-cloud-pcm/
+│   │   ├── SKILL.md
+│   │   ├── references/
+│   │   └── scripts/
+│   └── salesforce-revenue-cloud-pricing/
 │       ├── SKILL.md
-│       ├── references/
-│       │   ├── 01-architecture.md
-│       │   ├── 02-setup-and-permissions.md
-│       │   ├── 03-catalogs-and-categories.md
-│       │   └── ...
-│       └── scripts/
-│           ├── describe-pcm-objects.sh
-│           ├── list-catalogs.sh
-│           ├── query-product-tree.sh
-│           └── check-orphans.sh
+│       └── references/
+├── bin/
+│   └── rcaskills.js
+├── src/
+│   └── cli.js
+├── package.json
 ├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md

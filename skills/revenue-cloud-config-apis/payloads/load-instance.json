@@ -1,0 +1,14 @@
+{
+  "configuratorOptions": {
+    "addDefaultConfiguration": true,
+    "executeConfigurationRules": true,
+    "executePricing": true,
+    "qualifyAllProductsInTransaction": true,
+    "validateAmendRenewCancel": true,
+    "validateProductCatalog": true
+  },
+  "qualificationContext": {
+    "accountId": "001DU000001nHUGYA2"
+  },
+  "transactionId": "0Q0DU0000000XoN0AU"
+}

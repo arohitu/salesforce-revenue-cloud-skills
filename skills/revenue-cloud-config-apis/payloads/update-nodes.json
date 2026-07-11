@@ -1,0 +1,24 @@
+{
+  "configuratorOptions": {
+    "executePricing": true,
+    "returnProductCatalogData": true,
+    "qualifyAllProductsInTransaction": true,
+    "validateProductCatalog": true,
+    "validateAmendRenewCancel": true,
+    "executeConfigurationRules": true,
+    "addDefaultConfiguration": true
+  },
+  "qualificationContext": {
+    "accountId": "001xx0000000001AAA",
+    "contactId": "003xx00000000D7AAI"
+  },
+  "contextId": "008d27d7-e004-4906-a949-ee7d7c323c77",
+  "updatedNodes": [
+    {
+      "path": ["0Q0DE000000ISHJs81", "0QLDE000000IBXw4AO"],
+      "updatedAttributes": {
+        "Quantity": 5
+      }
+    }
+  ]
+}

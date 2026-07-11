@@ -1,0 +1,15 @@
+{
+  "configuratorOptions": {
+    "addDefaultConfiguration": true,
+    "executeConfigurationRules": true,
+    "executePricing": false,
+    "qualifyAllProductsInTransaction": false,
+    "validateAmendRenewCancel": false,
+    "validateProductCatalog": false
+  },
+  "contextMappingId": "11jEk000017YdyUIAS",
+  "qualificationContext": {
+    "accountId": "001DU000001nHUGYA2"
+  },
+  "transaction": "{\"Quote\":[{\"QuoteLineItem\":[{\"businessObjectType\":\"QuoteLineItem\",\"id\":\"qli_1\"},{\"businessObjectType\":\"QuoteLineItem\",\"id\":\"qli_2\"},{\"businessObjectType\":\"QuoteLineItem\",\"id\":\"qli_3\"},{\"businessObjectType\":\"QuoteLineItem\",\"id\":\"qli_4\"}],\"businessObjectType\":\"Quote\",\"id\":\"aJSdm0000003m3JGAQ\"}]}"
+}
