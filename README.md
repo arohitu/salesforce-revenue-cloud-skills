@@ -24,6 +24,7 @@ This lets agents keep domain expertise available without loading every detail in
 | [Revenue Cloud Product Catalog Management (PCM)](#revenue-cloud-product-catalog-management-pcm) | `skills/revenue-cloud-pcm/` | Designing, troubleshooting, and migrating PCM catalog and bundle master data |
 | [Revenue Cloud Product Configurator Business APIs](#revenue-cloud-product-configurator-business-apis) | `skills/revenue-cloud-config-apis/` | Calling Product Configurator Connect REST resources for quotes and orders |
 | [Revenue Cloud Decision Table](#revenue-cloud-decision-table) | `skills/revenue-cloud-decision-table/` | Finding, invoking, and debugging Decision Table lookup APIs |
+| [Enable Advance Configurator](#enable-advance-configurator) | `skills/enable-advance-configurator/` | Enabling Constraint Rules Engine setup and AdvancedConfigurator transaction processing type in a target org |
 | [Salesforce Revenue Cloud Pricing](#salesforce-revenue-cloud-pricing) | `skills/salesforce-revenue-cloud-pricing/` | Designing, implementing, and debugging pricing procedures and recipes |
 
 ### Revenue Cloud Pricing Diagnostics
@@ -87,6 +88,22 @@ Use this skill when you want an agent to find, inspect, invoke, or debug Salesfo
 
 [↑ Back to Available Skills](#available-skills)
 
+### Enable Advance Configurator
+
+Path: `skills/enable-advance-configurator/` · Full skill: [SKILL.md](skills/enable-advance-configurator/SKILL.md)
+
+Use this skill when you want an agent to enable and set up Advanced Configurator (Constraint Rules Engine) in a Salesforce Revenue Cloud org, especially involving:
+
+- Org alias confirmation and preflight checks with Salesforce CLI.
+- Creating required `ConstraintEngineNodeStatus__c` fields on Quote Line Item, Order Item, and Asset Action Source.
+- Deploying setup triggers for QuoteLineItem and OrderItem population logic.
+- Creating or reusing `TransactionProcessingType` records with `RuleEngine = AdvancedConfigurator`.
+- Pausing for required manual Salesforce Setup actions in Revenue Settings and page layouts.
+
+This skill is designed to combine safe automation (`--dry-run`, `--confirm`) with explicit user checkpoints for UI-only or irreversible setup steps.
+
+[↑ Back to Available Skills](#available-skills)
+
 ### Salesforce Revenue Cloud Pricing
 
 Path: `skills/salesforce-revenue-cloud-pricing/` · Full skill: [SKILL.md](skills/salesforce-revenue-cloud-pricing/SKILL.md)
@@ -117,7 +134,7 @@ npx rcaskills add arohitu/salesforce-revenue-cloud-skills
 
 ```bash
 # Install specific skills only
-npx rcaskills add arohitu/salesforce-revenue-cloud-skills --skill revenue-cloud-config-apis revenue-cloud-decision-table revenue-cloud-pcm revenue-cloud-pricing-diagnostics salesforce-revenue-cloud-pricing
+npx rcaskills add arohitu/salesforce-revenue-cloud-skills --skill enable-advance-configurator revenue-cloud-config-apis revenue-cloud-decision-table revenue-cloud-pcm revenue-cloud-pricing-diagnostics salesforce-revenue-cloud-pricing
 ```
 
 ```bash
@@ -145,6 +162,7 @@ For Cursor, a project-local skill can live under:
 ```text
 .cursor/skills/revenue-cloud-config-apis/
 .cursor/skills/revenue-cloud-decision-table/
+.cursor/skills/enable-advance-configurator/
 .cursor/skills/revenue-cloud-pricing-diagnostics/
 .cursor/skills/revenue-cloud-pcm/
 .cursor/skills/salesforce-revenue-cloud-pricing/
@@ -160,6 +178,7 @@ From your project root:
 mkdir -p .cursor/skills
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-config-apis .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-decision-table .cursor/skills/
+cp -R /path/to/salesforce-revenue-cloud-skills/skills/enable-advance-configurator .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-pricing-diagnostics .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-pcm .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/salesforce-revenue-cloud-pricing .cursor/skills/
@@ -222,6 +241,14 @@ Find the Decision Table used for volume discounting and invoke it with the quote
 ```
 
 ```text
+Help me enable Advanced Configurator in org alias rc-dev. Start with prereq checks, then dry-run deployment, then ask me before live changes.
+```
+
+```text
+Create or reuse a TransactionProcessingType with RuleEngine AdvancedConfigurator and tell me which manual Revenue Settings toggles I must complete.
+```
+
+```text
 Help me design a pricing procedure for product discovery list prices using decision tables and a pricing recipe.
 ```
 
@@ -232,6 +259,8 @@ For PCM work, the agent should ground recommendations in the relevant core objec
 For Product Configurator API work, the agent should use the bundled payloads and script, respect the v67.0 minimum API version, and distinguish `transactionId` from `contextId` when calling load, configure, node, quantity, and rules resources.
 
 For Decision Table work, the agent should identify the table Id, build a valid `conditionsList` payload, invoke the lookup API, and report `outcomeList` values and errors.
+
+For Enable Advance Configurator work, the agent should validate org readiness first, perform dry-run-first setup automation, pause for manual Revenue Settings/page-layout actions, and only execute live deploy or Tooling API creation after explicit confirmation.
 
 For pricing design and debugging, the agent should identify the pricing surface, map the path from context to result, and use simulation or Price Waterfall when validating behavior.
 
@@ -256,6 +285,18 @@ For pricing diagnostics, `SKILL.md` stays focused on the default workflow, refer
 │   │   │   └── ...
 │   │   └── scripts/
 │   │       └── call-configurator-apis.sh
+│   ├── enable-advance-configurator/
+│   │   ├── SKILL.md
+│   │   ├── references/
+│   │   │   └── setup-workflow.md
+│   │   ├── evals/
+│   │   │   └── evals.json
+│   │   └── scripts/
+│   │       ├── check-advanced-configurator-prereqs.sh
+│   │       ├── prepare-advanced-configurator-source.sh
+│   │       ├── deploy-advanced-configurator-source.sh
+│   │       ├── create-advanced-configurator-tpt.sh
+│   │       └── verify-advanced-configurator-setup.sh
 │   ├── revenue-cloud-decision-table/
 │   │   ├── SKILL.md
 │   │   └── scripts/
