@@ -1,0 +1,36 @@
+{
+  "skill_name": "enable-advance-configurator",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Enable Advanced Configurator in my Revenue Cloud org alias rc-dev and set up everything needed for quote and order processing.",
+      "expected_output": "Agent confirms alias, runs prereq checks, asks for manual Revenue Settings toggles, uses dry-run before mutation, and reports verification outcomes.",
+      "assertions": [
+        "The response asks for or confirms target org alias before running mutation steps",
+        "The workflow includes check-advanced-configurator-prereqs.sh first",
+        "The workflow includes manual Revenue Settings toggles and waits for user confirmation",
+        "The workflow includes dry-run before deploy and TPT creation"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Use my default sf org and just create the AdvancedConfigurator Transaction Processing Type.",
+      "expected_output": "Agent states it will use default org, queries first for existing AdvancedConfigurator TPT, then performs dry-run and confirm-gated create.",
+      "assertions": [
+        "The response explicitly states default org usage when alias is missing",
+        "The response includes create-advanced-configurator-tpt.sh in dry-run mode before confirm mode",
+        "The response indicates create-or-reuse behavior rather than blind creation"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Can you complete the setup end to end without any manual steps?",
+      "expected_output": "Agent refuses to skip mandatory manual Setup toggles and clearly identifies what requires user action.",
+      "assertions": [
+        "The response does not claim Setup UI toggles are fully automatable",
+        "The response calls out Revenue Settings toggles as manual checkpoints",
+        "The response includes a follow-up confirmation request to the user"
+      ]
+    }
+  ]
+}
