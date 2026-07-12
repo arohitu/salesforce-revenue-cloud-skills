@@ -17,6 +17,7 @@ Checks:
   - latest supported REST API version
   - object/field readiness
   - existing Apex triggers and AdvancedConfigurator TPT records
+  - AdvancedConfiguratorDesigner permission set assignment
 EOF
 }
 
@@ -40,6 +41,7 @@ ORG_JSON="$(sf org display --verbose --json "${ORG_FLAG[@]}")"
 INSTANCE_URL="$(printf "%s" "$ORG_JSON" | jq -r '.result.instanceUrl')"
 ACCESS_TOKEN="$(printf "%s" "$ORG_JSON" | jq -r '.result.accessToken')"
 USERNAME="$(printf "%s" "$ORG_JSON" | jq -r '.result.username')"
+USER_ID="$(printf "%s" "$ORG_JSON" | jq -r '.result.id // .result.userId // empty')"
 
 [[ -n "$INSTANCE_URL" && "$INSTANCE_URL" != "null" ]] || { echo "Error: failed to resolve instanceUrl" >&2; exit 3; }
 [[ -n "$ACCESS_TOKEN" && "$ACCESS_TOKEN" != "null" ]] || { echo "Error: failed to resolve accessToken" >&2; exit 3; }
@@ -54,9 +56,9 @@ required_field_exists() {
     | jq -e --arg fn "$field_name" '.result.fields | map(.name) | index($fn) != null' >/dev/null
 }
 
-object_exists() {
-  local object_name="$1"
-  sf sobject describe --sobject "$object_name" --json "${ORG_FLAG[@]}" >/dev/null 2>&1
+tpt_object_available() {
+  sf data query --use-tooling-api --json "${ORG_FLAG[@]}" --query \
+    "SELECT Id FROM TransactionProcessingType LIMIT 1" >/dev/null 2>&1
 }
 
 QUOTE_FIELD=false
@@ -67,16 +69,32 @@ TPT_OBJECT=false
 if required_field_exists "QuoteLineItem" "ConstraintEngineNodeStatus__c"; then QUOTE_FIELD=true; fi
 if required_field_exists "OrderItem" "ConstraintEngineNodeStatus__c"; then ORDER_FIELD=true; fi
 if required_field_exists "AssetActionSource" "ConstraintEngineNodeStatus__c"; then ASSET_SOURCE_FIELD=true; fi
-if object_exists "TransactionProcessingType"; then TPT_OBJECT=true; fi
+if tpt_object_available; then TPT_OBJECT=true; fi
 
 TRIGGERS_JSON="$(sf data query --use-tooling-api --json "${ORG_FLAG[@]}" --query \
 "SELECT Id, Name, TableEnumOrId, Status FROM ApexTrigger WHERE TableEnumOrId IN ('QuoteLineItem','OrderItem')")"
 
 TPT_JSON="$(sf data query --use-tooling-api --json "${ORG_FLAG[@]}" --query \
-"SELECT Id, DeveloperName, MasterLabel, RuleEngine FROM TransactionProcessingType WHERE RuleEngine = 'AdvancedConfigurator'")"
+"SELECT Id, DeveloperName, MasterLabel, RuleEngine FROM TransactionProcessingType WHERE RuleEngine = 'AdvancedConfigurator'" 2>/dev/null || echo '{"result":{"records":[]}}')"
 
-PERMSET_JSON="$(sf data query --json "${ORG_FLAG[@]}" --query \
-"SELECT Id, Name FROM PermissionSet WHERE Name = 'EnableAdvancedConfiguratorSetup' LIMIT 1")"
+DESIGNER_PS_JSON="$(sf data query --json "${ORG_FLAG[@]}" --query \
+"SELECT Id, Name, Label FROM PermissionSet WHERE Name = 'AdvancedConfiguratorDesigner' LIMIT 1")"
+
+SETUP_PS_JSON="$(sf data query --json "${ORG_FLAG[@]}" --query \
+"SELECT Id, Name, Label FROM PermissionSet WHERE Name = 'EnableAdvancedConfiguratorSetup' LIMIT 1")"
+
+DESIGNER_ASSIGNED=false
+DESIGNER_PS_ID="$(printf "%s" "$DESIGNER_PS_JSON" | jq -r '.result.records[0].Id // empty')"
+if [[ -n "$DESIGNER_PS_ID" ]]; then
+  if [[ -z "$USER_ID" || "$USER_ID" == "null" ]]; then
+    USER_ID="$(sf data query --json "${ORG_FLAG[@]}" --query "SELECT Id FROM User WHERE Username = '$USERNAME' LIMIT 1" | jq -r '.result.records[0].Id // empty')"
+  fi
+  if [[ -n "$USER_ID" ]]; then
+    ASSIGN_COUNT="$(sf data query --json "${ORG_FLAG[@]}" --query \
+      "SELECT Id FROM PermissionSetAssignment WHERE AssigneeId = '$USER_ID' AND PermissionSetId = '$DESIGNER_PS_ID' LIMIT 1" | jq -r '.result.totalSize')"
+    [[ "$ASSIGN_COUNT" != "0" ]] && DESIGNER_ASSIGNED=true
+  fi
+fi
 
 printf "%s\n" "$TRIGGERS_JSON" | jq --arg user "$USERNAME" \
   --argjson api "$LATEST_API_VERSION" \
@@ -84,8 +102,10 @@ printf "%s\n" "$TRIGGERS_JSON" | jq --arg user "$USERNAME" \
   --argjson orderField "$ORDER_FIELD" \
   --argjson assetSourceField "$ASSET_SOURCE_FIELD" \
   --argjson tptObject "$TPT_OBJECT" \
+  --argjson designerAssigned "$DESIGNER_ASSIGNED" \
   --argjson tptRecords "$(printf "%s" "$TPT_JSON" | jq '.result.records | map(del(.attributes))')" \
-  --argjson permissionSet "$(printf "%s" "$PERMSET_JSON" | jq '.result.records | map(del(.attributes))')" \
+  --argjson designerPermissionSet "$(printf "%s" "$DESIGNER_PS_JSON" | jq '.result.records | map(del(.attributes))')" \
+  --argjson setupPermissionSet "$(printf "%s" "$SETUP_PS_JSON" | jq '.result.records | map(del(.attributes))')" \
   '{
     username: $user,
     latestApiVersion: $api,
@@ -93,11 +113,13 @@ printf "%s\n" "$TRIGGERS_JSON" | jq --arg user "$USERNAME" \
       quoteLineItemField: $quoteField,
       orderItemField: $orderField,
       assetActionSourceField: $assetSourceField,
-      transactionProcessingTypeObjectAvailable: $tptObject
+      transactionProcessingTypeObjectAvailable: $tptObject,
+      advancedConfiguratorDesignerAssigned: $designerAssigned
     },
     existing: {
       triggers: (.result.records | map(del(.attributes))),
       advancedConfiguratorTransactionProcessingTypes: $tptRecords,
-      setupPermissionSet: $permissionSet
+      designerPermissionSet: $designerPermissionSet,
+      setupPermissionSet: $setupPermissionSet
     }
   }'

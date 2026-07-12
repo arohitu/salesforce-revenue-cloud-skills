@@ -9,8 +9,8 @@ Create or reuse TransactionProcessingType with RuleEngine=AdvancedConfigurator.
 
 Options:
   --target-org ALIAS         Required sf org alias/username
-  --developer-name NAME      DeveloperName (default: AdvancedConfiguratorDefault)
-  --master-label LABEL       MasterLabel (default: Advanced Configurator Default)
+  --developer-name NAME      DeveloperName (default: AdvancedConfigurator)
+  --master-label LABEL       MasterLabel (default: AdvancedConfigurator)
   --description TEXT         Description (default: Advanced Configurator setup)
   --save-type VALUE          SaveType (default: Standard)
   --pricing-preference VAL   Optional PricingPreference
@@ -24,8 +24,8 @@ EOF
 }
 
 TARGET_ORG=""
-DEVELOPER_NAME="AdvancedConfiguratorDefault"
-MASTER_LABEL="Advanced Configurator Default"
+DEVELOPER_NAME="AdvancedConfigurator"
+MASTER_LABEL="AdvancedConfigurator"
 DESCRIPTION="Advanced Configurator setup"
 SAVE_TYPE="Standard"
 PRICING_PREFERENCE=""
@@ -74,6 +74,15 @@ ACCESS_TOKEN="$(printf "%s" "$ORG_JSON" | jq -r '.result.accessToken')"
 if [[ -z "$API_VERSION" ]]; then
   VERSIONS_JSON="$(curl -sS -H "Authorization: Bearer $ACCESS_TOKEN" "$INSTANCE_URL/services/data/")"
   API_VERSION="$(printf "%s" "$VERSIONS_JSON" | jq -r 'map(.version|tonumber)|max')"
+fi
+
+if ! sf data query --use-tooling-api --json --target-org "$TARGET_ORG" --query \
+  "SELECT Id FROM TransactionProcessingType LIMIT 1" >/dev/null 2>&1; then
+  jq -n '{
+    status: "blocked",
+    error: "TransactionProcessingType Tooling API is unavailable. Enable enableTransactionProcessor in RevenueManagement settings first."
+  }' >&2
+  exit 4
 fi
 
 safe_dev_name="$(printf "%s" "$DEVELOPER_NAME" | sed "s/'/\\\\'/g")"
