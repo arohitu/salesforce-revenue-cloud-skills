@@ -4,20 +4,21 @@
     {
       "id": 1,
       "prompt": "Enable Advanced Configurator in my Revenue Cloud org alias rc-dev and set up everything needed for quote and order processing.",
-      "expected_output": "Agent confirms alias, runs prereq checks, asks for manual Revenue Settings toggles, uses dry-run before mutation, and reports verification outcomes.",
+      "expected_output": "Agent confirms alias, runs prereq checks, assigns AdvancedConfiguratorDesigner, uses metadata settings automation, dry-run before mutation, creates TPT after transaction processor is enabled, and reports verification outcomes.",
       "assertions": [
         "The response asks for or confirms target org alias before running mutation steps",
         "The workflow includes check-advanced-configurator-prereqs.sh first",
-        "The workflow includes manual Revenue Settings toggles and waits for user confirmation",
-        "The workflow includes dry-run before deploy and TPT creation"
+        "The workflow includes enable-advanced-configurator-settings.sh before TPT creation",
+        "The workflow includes dry-run before deploy, settings deploy, and TPT creation"
       ]
     },
     {
       "id": 2,
       "prompt": "Use my default sf org and just create the AdvancedConfigurator Transaction Processing Type.",
-      "expected_output": "Agent states it will use default org, queries first for existing AdvancedConfigurator TPT, then performs dry-run and confirm-gated create.",
+      "expected_output": "Agent states it will use default org, checks transaction processor is enabled, queries first for existing AdvancedConfigurator TPT, then performs dry-run and confirm-gated create.",
       "assertions": [
         "The response explicitly states default org usage when alias is missing",
+        "The response checks or mentions enableTransactionProcessor prerequisite before TPT creation",
         "The response includes create-advanced-configurator-tpt.sh in dry-run mode before confirm mode",
         "The response indicates create-or-reuse behavior rather than blind creation"
       ]
@@ -25,11 +26,35 @@
     {
       "id": 3,
       "prompt": "Can you complete the setup end to end without any manual steps?",
-      "expected_output": "Agent refuses to skip mandatory manual Setup toggles and clearly identifies what requires user action.",
+      "expected_output": "Agent explains what is automatable via metadata/scripts and what still requires explicit user confirmation (deploy confirm gates, irreversible transaction processing).",
       "assertions": [
-        "The response does not claim Setup UI toggles are fully automatable",
-        "The response calls out Revenue Settings toggles as manual checkpoints",
+        "The response does not claim every step is zero-touch without user confirmation",
+        "The response mentions metadata automation for Revenue Settings where possible",
+        "The response calls out irreversible enableTransactionProcessor or confirm gates",
         "The response includes a follow-up confirmation request to the user"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Enable Advanced Configurator in revsnapdev1 using retrieve-then-update for settings and layouts.",
+      "expected_output": "Agent follows retrieve-then-update pattern, deploys only changed settings files, and updates Quote/Order layouts with SalesTransactionTypeId.",
+      "assertions": [
+        "The response mentions retrieve-then-update for settings and layouts",
+        "The response includes enable-advanced-configurator-settings.sh",
+        "The response includes update-quote-order-layouts.sh",
+        "The response warns against deploying bulk Settings retrieve output"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Update my RLM_SalesTransactionContext context definition for Advanced Configurator constraint mappings in org rc-dev.",
+      "expected_output": "Agent runs context definition update as the last setup step after layouts, asks for API name, runs update-context-definition-constraints.sh dry-run then confirm, and asks the user to manually verify in Setup whether deploy succeeded or failed.",
+      "assertions": [
+        "The response includes update-context-definition-constraints.sh",
+        "The response mentions --context-definition-name or asks for the context definition API name",
+        "The response includes dry-run before confirm for context definition deploy",
+        "The response asks the user to manually verify the context definition after deploy attempt",
+        "The response notes AssetToSalesTransactionMapping as a manual checkpoint"
       ]
     }
   ]
