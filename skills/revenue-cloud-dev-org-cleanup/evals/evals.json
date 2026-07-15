@@ -1,0 +1,36 @@
+{
+  "skill_name": "revenue-cloud-dev-org-cleanup",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a connected org alias demo-dev. Delete all Revenue Cloud products and anything blocking them, then tell me how many records were deleted and from how many objects.",
+      "expected_output": "The agent uses the cleanup skill, runs the bundled script against demo-dev, and reports deleted record and object counts in a concise summary.",
+      "assertions": [
+        "The workflow uses the bundled cleanup script instead of ad hoc manual deletes",
+        "The cleanup sequence handles dependency order before deleting Product2",
+        "The final response reports the number of objects deleted from",
+        "The final response reports the number of records deleted"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Preview what would be deleted from my Revenue Cloud sandbox tcm-demo if we purge products and their dependent records, but do not make changes yet.",
+      "expected_output": "The agent runs the skill in dry-run mode and returns planned counts without deleting anything.",
+      "assertions": [
+        "The workflow uses --dry-run",
+        "The response clearly says no records were actually deleted",
+        "The response includes planned counts for deletion candidates"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Reset the Revenue Cloud demo org rc-dev and also try to remove Accounts after product cleanup if they are safe to delete.",
+      "expected_output": "The agent runs the cleanup with account deletion enabled, still prioritizes Product2 dependency order, and reports protected leftovers if some Accounts cannot be deleted.",
+      "assertions": [
+        "The workflow enables optional account cleanup explicitly",
+        "The response separates deleted records from protected leftovers",
+        "The cleanup still deletes products before treating remaining Accounts as blockers"
+      ]
+    }
+  ]
+}

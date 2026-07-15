@@ -26,6 +26,7 @@ This lets agents keep domain expertise available without loading every detail in
 | [Revenue Cloud Decision Table](#revenue-cloud-decision-table) | `skills/revenue-cloud-decision-table/` | Finding, invoking, and debugging Decision Table lookup APIs |
 | [Enable Advance Configurator](#enable-advance-configurator) | `skills/enable-advance-configurator/` | Enabling Constraint Rules Engine setup and AdvancedConfigurator transaction processing type in a target org |
 | [Salesforce Revenue Cloud Pricing](#salesforce-revenue-cloud-pricing) | `skills/salesforce-revenue-cloud-pricing/` | Designing, implementing, and debugging pricing procedures and recipes |
+| [Revenue Cloud Dev Org Cleanup](#revenue-cloud-dev-org-cleanup) | `skills/revenue-cloud-dev-org-cleanup/` | Safely purging products and dependent Revenue Cloud data to reset a dev/sandbox org |
 
 ### Revenue Cloud Pricing Diagnostics
 
@@ -119,6 +120,22 @@ For field-level lineage in an existing implementation, pair this skill with `rev
 
 [↑ Back to Available Skills](#available-skills)
 
+### Revenue Cloud Dev Org Cleanup
+
+Path: `skills/revenue-cloud-dev-org-cleanup/` · Full skill: [SKILL.md](skills/revenue-cloud-dev-org-cleanup/SKILL.md)
+
+Use this skill when you want an agent to clean or reset a Salesforce Revenue Cloud development or sandbox org by deleting `Product2` records and their dependent data in a dependency-safe order, especially involving:
+
+- Purging products along with dependent quotes, opportunities, orders, price book entries, and catalog data.
+- Clearing usage-management records (usage resources, grants, entitlements) that block product or order deletion.
+- Applying required status changes (for example `Order.Status -> Draft`) before deletion.
+- Running an impact preview with `--dry-run` before executing destructive cleanup.
+- Optionally attempting `Account` deletion for broader resets.
+
+The skill bundles a `cleanup_revenue_cloud_dev_org.py` script that performs multi-pass, retry-aware deletion and emits a machine-readable JSON summary, plus a `references/cleanup-order.md` reference documenting the delete order and common blocker patterns. This skill is for destructive dev/sandbox cleanup only. It is not for Salesforce CPQ (`SBQQ__*`) cleanup or production-data purges.
+
+[↑ Back to Available Skills](#available-skills)
+
 ## Installation
 
 This folder is designed to be copied into any project or agent skill directory.
@@ -134,7 +151,7 @@ npx rcaskills add arohitu/salesforce-revenue-cloud-skills
 
 ```bash
 # Install specific skills only
-npx rcaskills add arohitu/salesforce-revenue-cloud-skills --skill enable-advance-configurator revenue-cloud-config-apis revenue-cloud-decision-table revenue-cloud-pcm revenue-cloud-pricing-diagnostics salesforce-revenue-cloud-pricing
+npx rcaskills add arohitu/salesforce-revenue-cloud-skills --skill enable-advance-configurator revenue-cloud-config-apis revenue-cloud-decision-table revenue-cloud-pcm revenue-cloud-pricing-diagnostics salesforce-revenue-cloud-pricing revenue-cloud-dev-org-cleanup
 ```
 
 ```bash
@@ -144,8 +161,8 @@ npx rcaskills add arohitu/salesforce-revenue-cloud-skills --list
 
 Behavior:
 
-- Prompts for install target: project `./.agent/skills` or global `~/.agent/skills`.
-- Creates `.agent/skills` if missing.
+- Prompts for install target: project `./.agents/skills` or global `~/.agents/skills`.
+- Creates `.agents/skills` if missing.
 - Interactive multi-select supports arrow keys to navigate, spacebar to select, and enter to install.
 - Defaults to all skills selected when `--skill` is not provided.
 
@@ -311,9 +328,17 @@ For pricing diagnostics, `SKILL.md` stays focused on the default workflow, refer
 │   │   ├── SKILL.md
 │   │   ├── references/
 │   │   └── scripts/
-│   └── salesforce-revenue-cloud-pricing/
+│   ├── salesforce-revenue-cloud-pricing/
+│   │   ├── SKILL.md
+│   │   └── references/
+│   └── revenue-cloud-dev-org-cleanup/
 │       ├── SKILL.md
-│       └── references/
+│       ├── references/
+│       │   └── cleanup-order.md
+│       ├── evals/
+│       │   └── evals.json
+│       └── scripts/
+│           └── cleanup_revenue_cloud_dev_org.py
 ├── bin/
 │   └── rcaskills.js
 ├── src/

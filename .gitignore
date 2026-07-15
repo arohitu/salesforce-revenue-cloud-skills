@@ -2,7 +2,7 @@
 node_modules/
 .tmp-test-project/
 .tmp-test-home/
-.agent/
+.agents/
 .DS_Store
 *.tgz
 npm-debug.log*

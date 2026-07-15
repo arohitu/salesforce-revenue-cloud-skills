@@ -22,8 +22,8 @@ export async function runCli(argv = process.argv) {
     .argument("<repo>", "GitHub repo in owner/repo format")
     .option("--list", "List skills and exit")
     .option("--skill <skills...>", "Install only specific skill names")
-    .option("--project", "Install into current project .agent/skills without prompting")
-    .option("--global", "Install into ~/.agent/skills without prompting")
+    .option("--project", "Install into current project .agents/skills without prompting")
+    .option("--global", "Install into ~/.agents/skills without prompting")
     .action(async (repo, options) => {
       await handleAddCommand(repo, options);
     });
@@ -225,21 +225,21 @@ async function chooseInstallTarget(options) {
     throw new Error("Use only one of --project or --global.");
   }
   if (options.global) {
-    return resolve(homedir(), ".agent", "skills");
+    return resolve(homedir(), ".agents", "skills");
   }
   if (options.project) {
-    return resolve(process.cwd(), ".agent", "skills");
+    return resolve(process.cwd(), ".agents", "skills");
   }
 
   const target = await select({
     message: "Choose installation location",
     choices: [
-      { name: "Project (.agent/skills)", value: "project" },
-      { name: "Global (~/.agent/skills)", value: "global" }
+      { name: "Project (.agents/skills)", value: "project" },
+      { name: "Global (~/.agents/skills)", value: "global" }
     ]
   });
 
-  return target === "global" ? resolve(homedir(), ".agent", "skills") : resolve(process.cwd(), ".agent", "skills");
+  return target === "global" ? resolve(homedir(), ".agents", "skills") : resolve(process.cwd(), ".agents", "skills");
 }
 
 async function installSkills(skills, targetDir) {
