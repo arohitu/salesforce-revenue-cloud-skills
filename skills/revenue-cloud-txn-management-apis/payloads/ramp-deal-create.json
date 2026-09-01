@@ -1,0 +1,13 @@
+{
+  "transactionId": "0Q0xx0000004C92CAE",
+  "transactionLineId": "0QLxx0000004C9VGAU",
+  "subscriptionTerm": 14,
+  "subscriptionTermUnit": "MONTHS",
+  "trialTerm": 45,
+  "trialTermUnit": "DAYS",
+  "segmentType": "YEARLY",
+  "executionSettings": {
+    "executePricing": true,
+    "executeConfigRules": false
+  }
+}

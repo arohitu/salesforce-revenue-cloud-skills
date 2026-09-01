@@ -1,0 +1,52 @@
+{
+  "pricingPref": "System",
+  "configurationInput": "RunAndAllowErrors",
+  "configurationOptions": {
+    "validateProductCatalog": true,
+    "validateAmendRenewCancel": true,
+    "executeConfigurationRules": true,
+    "addDefaultConfiguration": true
+  },
+  "graph": {
+    "graphId": "createQuote",
+    "records": [
+      {
+        "referenceId": "refQuote",
+        "record": {
+          "attributes": {
+            "type": "Quote",
+            "method": "POST"
+          },
+          "OpportunityId": "006xx000001a2oWAAQ",
+          "Pricebook2Id": "01sxx0000005ptpAAA"
+        }
+      },
+      {
+        "referenceId": "refQuoteLineItem1",
+        "record": {
+          "attributes": {
+            "type": "QuoteLineItem",
+            "method": "POST"
+          },
+          "QuoteId": "@{refQuote.id}",
+          "PricebookEntryId": "01uxx0000008yXPAAY",
+          "Product2Id": "01txx0000006i2UAAQ",
+          "Quantity": 2,
+          "UnitPrice": 800.0,
+          "StartDate": "2024-03-11"
+        }
+      },
+      {
+        "referenceId": "refQuoteLineItemAttribute",
+        "record": {
+          "attributes": {
+            "type": "QuoteLineItemAttribute",
+            "method": "POST"
+          },
+          "QuoteLineItemId": "@{refQuoteLineItem1.id}",
+          "AttributeDefinitionId": "0tjxx0000000001AAA"
+        }
+      }
+    ]
+  }
+}

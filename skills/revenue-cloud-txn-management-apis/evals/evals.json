@@ -1,0 +1,98 @@
+{
+  "skill_name": "revenue-cloud-txn-management-apis",
+  "evals": [
+    {
+      "id": "place-a-quote",
+      "prompt": "In Salesforce Revenue Cloud, create a quote with one line item over REST with pricing and tax applied.",
+      "expected_output": "Guidance to POST /connect/rev/sales-transaction/actions/place (Place Sales Transaction) with an object graph containing a Quote and a QuoteLineItem record, using the bundled script, and to check the async result via the tracker id.",
+      "assertions": [
+        "The output selects the place-sales-transaction resource (/connect/rev/sales-transaction/actions/place), not the deprecated place-quote.",
+        "The output builds an object graph with records that have attributes.type and attributes.method and @{ref.id} references.",
+        "The output mentions pricingPref/taxPref preferences.",
+        "The output notes the call is asynchronous and to check sales-transaction-errors with the tracker id.",
+        "The output uses the bundled call-txn-management-apis.sh script with an authorized org."
+      ]
+    },
+    {
+      "id": "debug-async-place-error",
+      "prompt": "My Revenue Cloud Place Sales Transaction call returned success but the order line items didn't save. How do I find out why?",
+      "expected_output": "Direction to call GET /connect/revenue/transaction-management/sales-transactions/actions/place/{trackerId}/errors with the tracker id from the place response, optionally includeRetryablePayload=true, because the place API is asynchronous.",
+      "assertions": [
+        "The output explains Place Sales Transaction is asynchronous so a 2xx doesn't confirm persistence.",
+        "The output selects the sales-transaction-errors GET resource with the trackerId path parameter.",
+        "The output mentions the includeRetryablePayload query option.",
+        "The output notes the errors API returns blocking errors and rollbackedReferenceIds, not non-blocking warnings."
+      ]
+    },
+    {
+      "id": "amend-usage-asset",
+      "prompt": "How do I amend a usage-based asset in Revenue Cloud to increase its quantity via the API?",
+      "expected_output": "Use POST /connect/revenue-management/assets/actions/amend with assetIds, amendmentStartDate, quantityChange, and outputRecordType set to Quote, following the two-step quote-then-order flow for usage products, and note the InitiateAmend permission set.",
+      "assertions": [
+        "The output selects the asset-amend resource.",
+        "The output sets outputRecordType to Quote and describes the two-step flow for usage products.",
+        "The output requires assetIds, amendmentStartDate, and quantityChange.",
+        "The output mentions the InitiateAmend API permission set."
+      ]
+    },
+    {
+      "id": "ramp-deal-then-place",
+      "prompt": "I need to create a yearly ramp deal on a quote line in Revenue Cloud and have it persist. Which APIs do I call?",
+      "expected_output": "Call ramp-deal-create (POST .../{resourceId}/actions/ramp-deal-create) to stage segments and get a context id, then call Place Sales Transaction with that context id to persist the changes.",
+      "assertions": [
+        "The output selects the ramp-deal-create resource with the resourceId path parameter.",
+        "The output explains ramp-deal APIs only stage changes and return a context id.",
+        "The output says to call place-sales-transaction with the returned context id to persist.",
+        "The output distinguishes line ramps from group ramps (groupRampAction)."
+      ]
+    },
+    {
+      "id": "instant-pricing-grid",
+      "prompt": "I want to reprice the quote line grid as the user edits quantities, without saving a full transaction. What Revenue Cloud API do I use?",
+      "expected_output": "Use POST /industries/cpq/quotes/actions/get-instant-price (Instant Pricing), passing an optional contextId to reuse a context (or omit to create one) and the records to price.",
+      "assertions": [
+        "The output selects the instant-pricing resource (get-instant-price).",
+        "The output explains contextId is optional and omitting it creates a new context.",
+        "The output does not commit a full quote/order for this repricing use case."
+      ]
+    },
+    {
+      "id": "version-floor",
+      "prompt": "What API version should I use when calling the Revenue Cloud Transaction Management APIs from a script?",
+      "expected_output": "Use the latest version the org supports, never below v67.0, bumping to a resource's own minimum where higher.",
+      "assertions": [
+        "The output states the v67.0 minimum floor.",
+        "The output says to use the latest org-supported version.",
+        "The output notes the script auto-discovers the version and bumps per resource."
+      ]
+    },
+    {
+      "id": "cpq-boundary",
+      "prompt": "Can you use this skill to create a quote by inserting SBQQ__Quote__c and SBQQ__QuoteLine__c records in Salesforce CPQ?",
+      "expected_output": "A boundary response explaining that SBQQ__* is legacy Salesforce CPQ, not the core Revenue Cloud Transaction Management Connect REST APIs, so this skill does not apply.",
+      "assertions": [
+        "The output recognizes SBQQ__* as legacy Salesforce CPQ.",
+        "The output states this skill targets core Revenue Cloud transaction-management Connect REST APIs.",
+        "The output does not fabricate a CPQ endpoint."
+      ]
+    }
+  ],
+  "trigger_queries": [
+    { "query": "place an order over the Revenue Cloud REST API with pricing and configuration", "should_trigger": true },
+    { "query": "how do I POST to /connect/rev/sales-transaction/actions/place to create a quote?", "should_trigger": true },
+    { "query": "amend this asset to add 5 more licenses via the Agentforce Revenue Management API", "should_trigger": true },
+    { "query": "why did my place quote call return success but the line items never saved?", "should_trigger": true },
+    { "query": "clone this quote and all its line items through the sales transaction API", "should_trigger": true },
+    { "query": "create a ramp deal on a quote line and persist it in Revenue Cloud", "should_trigger": true },
+    { "query": "reprice the order line data grid instantly as quantities change without saving", "should_trigger": true },
+    { "query": "get eligible promotions for these line items on my quote over REST", "should_trigger": true },
+    { "query": "build the object graph to insert an Order and OrderItem in one place-sales-transaction request", "should_trigger": true },
+    { "query": "swap one asset for another and track it as a net-zero amendment", "should_trigger": true },
+    { "query": "design a pricing procedure and decision table strategy for volume discounts", "should_trigger": false },
+    { "query": "call the Revenue Cloud pricing API to price this cart and return the net unit price", "should_trigger": false },
+    { "query": "invoke the Product Configurator API to load a configuration instance for this bundle", "should_trigger": false },
+    { "query": "insert SBQQ__QuoteLine__c records to build a CPQ quote", "should_trigger": false },
+    { "query": "trace how Quote.RCA_TotalMRRAmount__c is populated by Revenue Cloud pricing", "should_trigger": false },
+    { "query": "what's the difference between an Order and a Quote object in Salesforce?", "should_trigger": false }
+  ]
+}

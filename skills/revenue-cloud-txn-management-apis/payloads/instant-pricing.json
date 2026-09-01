@@ -1,0 +1,36 @@
+{
+  "correlationId": "7847127122596",
+  "contextId": "0000000b28op21g00281751271041790cc1e5686282849a387dd3c59b310418b",
+  "records": [
+    {
+      "referenceId": "0Q0xx0000004DOSCA2",
+      "record": {
+        "attributes": {
+          "type": "Quote",
+          "method": "POST"
+        },
+        "Name": "Test Quote Proration Pricing",
+        "OpportunityId": "006xx000001a4ISAAY",
+        "Pricebook2Id": "01sxx0000005ptpAAA"
+      }
+    },
+    {
+      "referenceId": "refQuoteLine",
+      "record": {
+        "attributes": {
+          "type": "QuoteLineItem",
+          "method": "POST"
+        },
+        "QuoteId": "0Q0xx0000004DOSCA2",
+        "PricebookEntryId": "01uxx0000008zHmAAI",
+        "Product2Id": "01txx0000006jmWAAQ",
+        "Quantity": 2,
+        "UnitPrice": 25,
+        "StartDate": "2022-09-28",
+        "EndDate": "2028-09-27",
+        "PeriodBoundary": "ANNIVERSARY",
+        "BillingFrequency": "ANNUAL"
+      }
+    }
+  ]
+}
