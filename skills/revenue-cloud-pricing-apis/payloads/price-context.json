@@ -1,0 +1,9 @@
+{
+  "configurationOverrides": {
+    "skipWaterfall": true,
+    "useSessionScopedContext": true,
+    "persistContext": true,
+    "taggedData": false
+  },
+  "procedureName": "ES1"
+}

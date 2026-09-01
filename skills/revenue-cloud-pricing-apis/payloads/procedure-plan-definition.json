@@ -1,0 +1,18 @@
+{
+  "description": "Definition for Quote",
+  "developerName": "Quote_Definition_Sample",
+  "name": "Quote_Definition_Sample",
+  "processType": "Default",
+  "primaryObject": "BusinessHours",
+  "procedurePlanDefinitionVersions": [
+    {
+      "active": false,
+      "contextDefinition": "SalesTransactionContext__stdctx",
+      "readContextMapping": "QuoteEntitiesMapping",
+      "saveContextMapping": "QuoteEntitiesMapping",
+      "effectiveFrom": "2024-07-15T10:15:30.000Z",
+      "developerName": "Quote_Definition_V1",
+      "rank": 1
+    }
+  ]
+}

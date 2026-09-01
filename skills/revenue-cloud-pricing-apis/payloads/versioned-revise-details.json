@@ -1,0 +1,14 @@
+{
+  "entityName": "AttributeBasedAdjustment",
+  "id": "entityId",
+  "priceAdjustmentScheduleId": "priceAdjustmentScheduleId",
+  "productId": "ProductId",
+  "productSellingModelId": "PsmId",
+  "adjustmentType": "Percentage",
+  "adjustmentValue": "15.00",
+  "effectiveFrom": "2024-07-15T10:15:30.000Z",
+  "effectiveTo": "2025-07-15T10:15:30.000Z",
+  "additionalFieldsToValueMap": {
+    "attributeBasedAdjRuleId": "AttributeBasedAdjRuleId"
+  }
+}
