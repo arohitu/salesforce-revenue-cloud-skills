@@ -1,0 +1,47 @@
+{
+  "active": false,
+  "developerName": "sample_version_input",
+  "effectiveFrom": "2024-07-09T00:00:00.000Z",
+  "effectiveTo": "2025-07-09T00:00:00.000Z",
+  "contextDefinition": "SalesTransactionContext__stdctx",
+  "procedurePlanSections": [
+    {
+      "isInherited": false,
+      "procedurePlanOptions": [
+        {
+          "saveContextMapping": "AssetToSalesTransactionMapping",
+          "expressionSetDefinition": "9QAZ60000004ECOOA2",
+          "expressionSetLabel": "Revenue_Default_Pricing_Procedure",
+          "expressionSetApiName": "Revenue Default Pricing Procedure",
+          "logic": "1 AND 2",
+          "priority": 1,
+          "procedurePlanCriterion": [
+            {
+              "conditionSequence": 1,
+              "fieldObject": "BillingCountry",
+              "fieldPath": "BillingCountry",
+              "literalValue": "test",
+              "operator": "Equals",
+              "dataType": "Text"
+            },
+            {
+              "conditionSequence": 2,
+              "fieldObject": "BillingPostalCode",
+              "fieldPath": "BillingPostalCode",
+              "literalValue": "sample",
+              "operator": "Equals",
+              "dataType": "Text"
+            }
+          ]
+        }
+      ],
+      "resolutionType": "RuleBased",
+      "sectionType": "PricingProcedure",
+      "sequence": 1,
+      "subSectionType": "PricingProcedure"
+    }
+  ],
+  "rank": 1,
+  "readContextMapping": "ProductDiscoveryContextMapping",
+  "saveContextMapping": "OrderEntitiesMapping"
+}

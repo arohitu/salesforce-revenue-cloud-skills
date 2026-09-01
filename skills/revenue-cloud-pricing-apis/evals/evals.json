@@ -1,0 +1,85 @@
+{
+  "skill_name": "revenue-cloud-pricing-apis",
+  "evals": [
+    {
+      "id": "price-a-cart",
+      "prompt": "In Salesforce Revenue Cloud, call the pricing API to price this cart with two line items and return the net unit price per item.",
+      "expected_output": "Guidance to POST /connect/core-pricing/pricing with contextDefinitionId, contextMappingId, a stringified jsonDataString, and pricingProcedureId, using the bundled script, then read pricingResult and pricingResultErrors.",
+      "assertions": [
+        "The output selects the /connect/core-pricing/pricing POST resource.",
+        "The output requires contextDefinitionId and contextMappingId and treats pricingProcedureId as optional.",
+        "The output notes jsonDataString must be JSON passed as a String with businessObjectType on each node.",
+        "The output tells the user to check status plus pricingResultErrors and per-line dataPath results.",
+        "The output uses the bundled call-pricing-apis.sh script with an authorized org."
+      ]
+    },
+    {
+      "id": "reuse-existing-context",
+      "prompt": "I already created a price context instance. How do I run pricing against it over REST in Revenue Cloud?",
+      "expected_output": "Direction to POST /connect/core-pricing/price-contexts/{contextId} with the context instance id as a path parameter and an optional procedureName/configurationOverrides body.",
+      "assertions": [
+        "The output selects the price-contexts/{contextId} resource, not the full pricing resource.",
+        "The output passes the context id as a path parameter (--param contextId=...).",
+        "The output mentions the Pricing Response fields (success, executionId)."
+      ]
+    },
+    {
+      "id": "debug-failed-pricing-call",
+      "prompt": "My Revenue Cloud pricing REST call returns 200 but some line items have no price. How do I debug it?",
+      "expected_output": "A debugging path that checks status, pricingResultErrors, and per-line isSuccess/errors keyed by dataPath, then uses api-execution-logs and pricing-process-execution with the returned ids, and waterfall if enabled.",
+      "assertions": [
+        "The output explains a 200 can still contain per-line-item failures.",
+        "The output inspects status, pricingResultErrors, and dataPath-level errors.",
+        "The output uses apiExecutionId and pricingExecutionId with the log/execution GET resources.",
+        "The output notes waterfall requires price waterfall persistence to be enabled."
+      ]
+    },
+    {
+      "id": "sync-then-recipe",
+      "prompt": "Before pricing, I need the decision tables to have the latest data and I want to see the pricing recipes. Which Revenue Cloud pricing APIs do I call?",
+      "expected_output": "Use GET /connect/core-pricing/sync/{origin} (optionally with pricingRecipeId) to refresh, then GET /connect/core-pricing/recipe to list recipes and their decision tables.",
+      "assertions": [
+        "The output selects the sync resource with the origin path token.",
+        "The output selects the recipe GET resource.",
+        "The output does not require a request body for these GET resources."
+      ]
+    },
+    {
+      "id": "version-floor",
+      "prompt": "What API version should I use when calling the Revenue Cloud pricing APIs from a script?",
+      "expected_output": "Use the latest version the org supports, never below v67.0, and bump to a resource's own minimum (e.g. v68.0 for recipe clone / valid-elements).",
+      "assertions": [
+        "The output states the v67.0 minimum floor.",
+        "The output says to use the latest org-supported version.",
+        "The output notes some resources require a higher minimum such as v68.0."
+      ]
+    },
+    {
+      "id": "cpq-boundary",
+      "prompt": "Can you use this skill to call the pricing API that recalculates SBQQ__NetPrice__c on SBQQ__QuoteLine__c?",
+      "expected_output": "A boundary response explaining that SBQQ__* is legacy Salesforce CPQ, not core Revenue Cloud pricing Connect REST APIs, so this skill does not apply.",
+      "assertions": [
+        "The output recognizes SBQQ__* as legacy Salesforce CPQ.",
+        "The output states this skill targets core Revenue Cloud /connect/core-pricing APIs.",
+        "The output does not fabricate a CPQ endpoint."
+      ]
+    }
+  ],
+  "trigger_queries": [
+    { "query": "call the Revenue Cloud pricing API to price this quote's line items", "should_trigger": true },
+    { "query": "how do I POST to /connect/core-pricing/pricing with contextDefinitionId and jsonDataString?", "should_trigger": true },
+    { "query": "get the price for this cart over REST in Agentforce Revenue Management", "should_trigger": true },
+    { "query": "why did my Salesforce pricing REST call return a Failed status for some line items?", "should_trigger": true },
+    { "query": "sync pricing data so the decision tables are fresh before I price", "should_trigger": true },
+    { "query": "clone a pricing recipe and list its valid pricing elements via the API", "should_trigger": true },
+    { "query": "retrieve the price waterfall and pricing execution logs for this execution id", "should_trigger": true },
+    { "query": "create and evaluate a procedure plan definition for Revenue Cloud pricing over REST", "should_trigger": true },
+    { "query": "run pricing against an existing price context instance id", "should_trigger": true },
+    { "query": "how do I design a pricing procedure and decision table strategy for volume discounts?", "should_trigger": false },
+    { "query": "trace how Quote.RCA_TotalMRRAmount__c is populated by Revenue Cloud pricing", "should_trigger": false },
+    { "query": "call the Product Configurator API to load a configuration instance for this quote", "should_trigger": false },
+    { "query": "invoke the decision table lookup API for this product and quantity", "should_trigger": false },
+    { "query": "recalculate SBQQ__NetPrice__c on the CPQ quote line", "should_trigger": false },
+    { "query": "what's the difference between a pricebook entry and a price book in Salesforce?", "should_trigger": false }
+  ]
+}

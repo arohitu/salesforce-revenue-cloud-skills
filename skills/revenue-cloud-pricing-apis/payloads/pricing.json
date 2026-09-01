@@ -1,0 +1,48 @@
+{
+  "contextDefinitionId": "11Oxx0000006PdxEAE",
+  "contextMappingId": "11jxx0000004LDDAA2",
+  "jsonDataString": {
+    "Cart": [
+      {
+        "id": "cart_1001",
+        "cart_id": "cart_1001",
+        "PriceBookId": "PriceBookId_1001",
+        "businessObjectType": "Cart",
+        "CartItem": [
+          {
+            "id": "lineItem_1001",
+            "line_item_id": "lineItem_1001",
+            "Quantity": 7,
+            "PriceType": "OneTime",
+            "Frequency": "",
+            "UOM": "",
+            "businessObjectType": "CartItem",
+            "product_id": "01txx0000006i44AAA",
+            "UnitPrice": 6.8,
+            "NetUnitPrice": 0,
+            "Attribute": [
+              {
+                "name": "Color",
+                "code": "RED",
+                "isPriceImpacting": true,
+                "businessObjectType": "Attribute",
+                "id": "Attribute_1001",
+                "attribute_id": "Attribute_1001"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "pricingProcedureId": "9QMxx0000004CKKGA2",
+  "configurationOverrides": {
+    "skipWaterfall": true,
+    "useSessionScopedContext": true,
+    "persistContext": true,
+    "referenceKey": "referenceKey-12345",
+    "displayContext": false,
+    "taggedData": false,
+    "isHighVolumeLineItems": false
+  }
+}

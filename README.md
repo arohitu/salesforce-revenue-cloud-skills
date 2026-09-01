@@ -23,6 +23,7 @@ This lets agents keep domain expertise available without loading every detail in
 | [Revenue Cloud Pricing Diagnostics](#revenue-cloud-pricing-diagnostics) | `skills/revenue-cloud-pricing-diagnostics/` | Tracing how pricing fields are populated and calculated in existing orgs |
 | [Revenue Cloud Product Catalog Management (PCM)](#revenue-cloud-product-catalog-management-pcm) | `skills/revenue-cloud-pcm/` | Designing, troubleshooting, and migrating PCM catalog and bundle master data |
 | [Revenue Cloud Product Configurator Business APIs](#revenue-cloud-product-configurator-business-apis) | `skills/revenue-cloud-config-apis/` | Calling Product Configurator Connect REST resources for quotes and orders |
+| [Revenue Cloud Pricing Business APIs](#revenue-cloud-pricing-business-apis) | `skills/revenue-cloud-pricing-apis/` | Calling the Pricing Connect REST resources to price carts, sync data, manage recipes, and run procedure plans |
 | [Revenue Cloud Decision Table](#revenue-cloud-decision-table) | `skills/revenue-cloud-decision-table/` | Finding, invoking, and debugging Decision Table lookup APIs |
 | [Enable Advance Configurator](#enable-advance-configurator) | `skills/enable-advance-configurator/` | Enabling Constraint Rules Engine setup and AdvancedConfigurator transaction processing type in a target org |
 | [Salesforce Revenue Cloud Pricing](#salesforce-revenue-cloud-pricing) | `skills/salesforce-revenue-cloud-pricing/` | Designing, implementing, and debugging pricing procedures and recipes |
@@ -72,6 +73,23 @@ Use this skill when you want an agent to reference or call the Salesforce Revenu
 - Executing configurator rules for a quote or order via `contextId` or `transactionId`.
 
 The skill bundles sample payloads and a `call-configurator-apis.sh` script that authenticates through the Salesforce CLI and POSTs to all ten configurator resources. Minimum API version is v67.0.
+
+[↑ Back to Available Skills](#available-skills)
+
+### Revenue Cloud Pricing Business APIs
+
+Path: `skills/revenue-cloud-pricing-apis/` · Full skill: [SKILL.md](skills/revenue-cloud-pricing-apis/SKILL.md)
+
+Use this skill when you want an agent to reference or call the Salesforce Revenue Cloud (Agentforce Revenue Management) Pricing Connect REST resources under `/connect/core-pricing` and `/connect/procedure-plan-definitions`, especially involving:
+
+- Pricing a cart or line items in one call, or pricing against an existing price context.
+- Syncing pricing data to decision tables before pricing.
+- Reading, cloning, or mapping pricing recipes and listing valid pricing elements.
+- Retrieving the price waterfall and pricing execution logs to debug a pricing run.
+- PBE-derived pricing and versioned adjustment revisions.
+- Creating, evaluating, and versioning procedure plan definitions.
+
+The skill bundles sample payloads and a `call-pricing-apis.sh` script that authenticates through the Salesforce CLI and calls each resource by name (GET/POST, with path and query parameter support). Minimum API version is v67.0. It is not intended for legacy Salesforce CPQ `SBQQ__*` or Salesforce Billing `BLNG__*` pricing.
 
 [↑ Back to Available Skills](#available-skills)
 
@@ -134,7 +152,7 @@ npx rcaskills add arohitu/salesforce-revenue-cloud-skills
 
 ```bash
 # Install specific skills only
-npx rcaskills add arohitu/salesforce-revenue-cloud-skills --skill enable-advance-configurator revenue-cloud-config-apis revenue-cloud-decision-table revenue-cloud-pcm revenue-cloud-pricing-diagnostics salesforce-revenue-cloud-pricing
+npx rcaskills add arohitu/salesforce-revenue-cloud-skills --skill enable-advance-configurator revenue-cloud-config-apis revenue-cloud-pricing-apis revenue-cloud-decision-table revenue-cloud-pcm revenue-cloud-pricing-diagnostics salesforce-revenue-cloud-pricing
 ```
 
 ```bash
@@ -161,6 +179,7 @@ For Cursor, a project-local skill can live under:
 
 ```text
 .cursor/skills/revenue-cloud-config-apis/
+.cursor/skills/revenue-cloud-pricing-apis/
 .cursor/skills/revenue-cloud-decision-table/
 .cursor/skills/enable-advance-configurator/
 .cursor/skills/revenue-cloud-pricing-diagnostics/
@@ -177,6 +196,7 @@ From your project root:
 ```bash
 mkdir -p .cursor/skills
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-config-apis .cursor/skills/
+cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-pricing-apis .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-decision-table .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/enable-advance-configurator .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-pricing-diagnostics .cursor/skills/
@@ -237,6 +257,14 @@ Dry-run the bundled configurator API script against my org and show me the URLs 
 ```
 
 ```text
+Call the Revenue Cloud pricing API to price this cart and return the net unit price per line item.
+```
+
+```text
+My pricing REST call returns 200 but some line items have no price. Pull the execution logs and price waterfall to debug it.
+```
+
+```text
 Find the Decision Table used for volume discounting and invoke it with the quote's product and quantity inputs.
 ```
 
@@ -285,6 +313,18 @@ For pricing diagnostics, `SKILL.md` stays focused on the default workflow, refer
 │   │   │   └── ...
 │   │   └── scripts/
 │   │       └── call-configurator-apis.sh
+│   ├── revenue-cloud-pricing-apis/
+│   │   ├── SKILL.md
+│   │   ├── references/
+│   │   │   └── resources.md
+│   │   ├── payloads/
+│   │   │   ├── pricing.json
+│   │   │   ├── price-context.json
+│   │   │   └── ...
+│   │   ├── evals/
+│   │   │   └── evals.json
+│   │   └── scripts/
+│   │       └── call-pricing-apis.sh
 │   ├── enable-advance-configurator/
 │   │   ├── SKILL.md
 │   │   ├── references/

@@ -1,0 +1,12 @@
+{
+  "recipeId": "12Gxx0000005J9MEAU",
+  "pricingRecipeLookUpTableInputRepresentations": [
+    {
+      "lookupTableId": "0lDxx00000000HlEAI",
+      "pricingComponentType": "CustomDiscount"
+    }
+  ],
+  "pricingRecipeProcedureInputRepresentation": {
+    "procedureId": "9QLxx0000004C92GAE"
+  }
+}
