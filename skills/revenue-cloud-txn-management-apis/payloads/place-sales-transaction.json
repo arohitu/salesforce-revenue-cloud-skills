@@ -1,0 +1,47 @@
+{
+  "pricingPref": "System",
+  "catalogRatesPref": "Skip",
+  "configurationPref": {
+    "configurationMethod": "Skip",
+    "configurationOptions": {
+      "validateProductCatalog": true,
+      "validateAmendRenewCancel": true,
+      "executeConfigurationRules": true,
+      "addDefaultConfiguration": true
+    }
+  },
+  "taxPref": "Skip",
+  "graph": {
+    "graphId": "createQuote",
+    "records": [
+      {
+        "referenceId": "refQuote",
+        "record": {
+          "attributes": {
+            "method": "POST",
+            "type": "Quote"
+          },
+          "Name": "Quote_Acme",
+          "Pricebook2Id": "01sDU000000JvhbYAC"
+        }
+      },
+      {
+        "referenceId": "refQuoteLine0",
+        "record": {
+          "attributes": {
+            "type": "QuoteLineItem",
+            "method": "POST"
+          },
+          "QuoteId": "@{refQuote.id}",
+          "Product2Id": "01tDU000000F7b8YAC",
+          "PricebookEntryId": "01uDU000000fxt2YAA",
+          "UnitPrice": 100,
+          "Quantity": "1",
+          "StartDate": "2024-10-29",
+          "EndDate": "2025-03-01",
+          "PeriodBoundary": "Anniversary"
+        }
+      }
+    ]
+  }
+}

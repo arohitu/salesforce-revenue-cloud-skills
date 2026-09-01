@@ -1,0 +1,38 @@
+{
+  "swapStartDate": "2025-12-01T00:00:00Z",
+  "outputRecordType": "Quote",
+  "swapGroups": {
+    "groups": [
+      {
+        "referenceId": "DOWNGRADE-001",
+        "outGroup": {
+          "swapAssets": [
+            {
+              "assetId": "02ixx0000004HOAAA2",
+              "quantity": 1
+            }
+          ]
+        },
+        "inGroup": {
+          "graphId": "downgradeRequest",
+          "records": [
+            {
+              "referenceId": "refQuoteLine0",
+              "record": {
+                "attributes": {
+                  "type": "QuoteLineItem",
+                  "method": "POST"
+                },
+                "Product2Id": "01txx0000006iVlAAI",
+                "PricebookEntryId": "01uxx0000008ym4AAA",
+                "UnitPrice": 1049,
+                "Quantity": "1",
+                "StartDate": "2022-09-22"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

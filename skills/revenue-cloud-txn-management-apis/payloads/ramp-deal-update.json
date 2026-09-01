@@ -1,0 +1,44 @@
+{
+  "executionSettings": {
+    "executePricing": true,
+    "executeConfigRules": false
+  },
+  "addedNodes": [
+    {
+      "contextNodePath": [
+        "4f23961a5c98806f89305e064c67b397e93f1bb8a2a7a3a80db506f1d4110ee9",
+        "0Q0xx0000004CPACA2",
+        "RandomUUID"
+      ],
+      "contextNode": {
+        "Discount": 10,
+        "Quantity": 5,
+        "ItemSegmentName": "Year 5",
+        "StartDate": "2024-09-07T00:00:00.000Z",
+        "EndDate": "2024-09-07T00:00:00.000Z"
+      }
+    }
+  ],
+  "updatedNodes": [
+    {
+      "contextNodePath": [
+        "4f23961a5c98806f89305e064c67b397e93f1bb8a2a7a3a80db506f1d4110ee9",
+        "0Q0xx0000004CPACA2",
+        "0QLxx0000004CfIGAU"
+      ],
+      "contextNode": {
+        "Discount": 10,
+        "Quantity": 5
+      }
+    }
+  ],
+  "deletedNodes": [
+    {
+      "contextNodePath": [
+        "4f23961a5c98806f89305e064c67b397e93f1bb8a2a7a3a80db506f1d4110ee9",
+        "0Q0xx0000004CPACA2",
+        "0QLxx0000004CfIGAU"
+      ]
+    }
+  ]
+}

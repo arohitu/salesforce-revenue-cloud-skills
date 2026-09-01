@@ -1,0 +1,41 @@
+{
+  "pricingPref": "System",
+  "configurationInput": "RunAndAllowErrors",
+  "configurationOptions": {
+    "validateProductCatalog": true,
+    "validateAmendRenewCancel": true,
+    "executeConfigurationRules": true,
+    "addDefaultConfiguration": true
+  },
+  "graph": {
+    "graphId": "graphId",
+    "records": [
+      {
+        "referenceId": "refOrder",
+        "record": {
+          "attributes": {
+            "type": "Order",
+            "method": "POST",
+            "Id": "POST"
+          }
+        }
+      },
+      {
+        "referenceId": "refOrderItem",
+        "record": {
+          "attributes": {
+            "type": "OrderItem",
+            "method": "POST"
+          },
+          "OrderId": "@{refOrder.id}",
+          "OrderActionId": "@{refOrderAction.id}",
+          "ListPrice": "144.99",
+          "Quantity": 3,
+          "PricebookEntryId": "01uxx0000008yXPAAY",
+          "Product2Id": "01txx0000006i2UAAQ",
+          "UnitPrice": "199.49"
+        }
+      }
+    ]
+  }
+}

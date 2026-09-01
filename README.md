@@ -24,6 +24,7 @@ This lets agents keep domain expertise available without loading every detail in
 | [Revenue Cloud Product Catalog Management (PCM)](#revenue-cloud-product-catalog-management-pcm) | `skills/revenue-cloud-pcm/` | Designing, troubleshooting, and migrating PCM catalog and bundle master data |
 | [Revenue Cloud Product Configurator Business APIs](#revenue-cloud-product-configurator-business-apis) | `skills/revenue-cloud-config-apis/` | Calling Product Configurator Connect REST resources for quotes and orders |
 | [Revenue Cloud Pricing Business APIs](#revenue-cloud-pricing-business-apis) | `skills/revenue-cloud-pricing-apis/` | Calling the Pricing Connect REST resources to price carts, sync data, manage recipes, and run procedure plans |
+| [Revenue Cloud Transaction Management Business APIs](#revenue-cloud-transaction-management-business-apis) | `skills/revenue-cloud-txn-management-apis/` | Calling the Quote & Order Capture Connect REST resources to place quotes/orders, run asset actions, manage ramp deals, and handle promotions |
 | [Revenue Cloud Decision Table](#revenue-cloud-decision-table) | `skills/revenue-cloud-decision-table/` | Finding, invoking, and debugging Decision Table lookup APIs |
 | [Enable Advance Configurator](#enable-advance-configurator) | `skills/enable-advance-configurator/` | Enabling Constraint Rules Engine setup and AdvancedConfigurator transaction processing type in a target org |
 | [Salesforce Revenue Cloud Pricing](#salesforce-revenue-cloud-pricing) | `skills/salesforce-revenue-cloud-pricing/` | Designing, implementing, and debugging pricing procedures and recipes |
@@ -93,6 +94,23 @@ The skill bundles sample payloads and a `call-pricing-apis.sh` script that authe
 
 [↑ Back to Available Skills](#available-skills)
 
+### Revenue Cloud Transaction Management Business APIs
+
+Path: `skills/revenue-cloud-txn-management-apis/` · Full skill: [SKILL.md](skills/revenue-cloud-txn-management-apis/SKILL.md)
+
+Use this skill when you want an agent to reference or call the Salesforce Revenue Cloud (Agentforce Revenue Management) Transaction Management Connect REST resources for Quote & Order Capture, especially involving:
+
+- Creating or updating a quote or order with integrated pricing, configuration, and tax (Place Sales Transaction).
+- Fetching instant pricing for a quote or order line data grid.
+- Running asset actions: amend, cancel, renew, swap, upgrade, and downgrade.
+- Cloning or reading a sales transaction, and creating supplemental/change orders.
+- Managing ramp deals (create, update, delete, view) and persisting them.
+- Getting or creating promotions, and debugging asynchronous Place Sales Transaction errors.
+
+The skill bundles sample payloads and a `call-txn-management-apis.sh` script that authenticates through the Salesforce CLI and calls each resource by name (GET/POST/PUT, with path and query parameter support). Minimum API version is v67.0. It is not intended for legacy Salesforce CPQ `SBQQ__*` or Salesforce Billing `BLNG__*` quoting.
+
+[↑ Back to Available Skills](#available-skills)
+
 ### Revenue Cloud Decision Table
 
 Path: `skills/revenue-cloud-decision-table/` · Full skill: [SKILL.md](skills/revenue-cloud-decision-table/SKILL.md)
@@ -152,7 +170,7 @@ npx rcaskills add arohitu/salesforce-revenue-cloud-skills
 
 ```bash
 # Install specific skills only
-npx rcaskills add arohitu/salesforce-revenue-cloud-skills --skill enable-advance-configurator revenue-cloud-config-apis revenue-cloud-pricing-apis revenue-cloud-decision-table revenue-cloud-pcm revenue-cloud-pricing-diagnostics salesforce-revenue-cloud-pricing
+npx rcaskills add arohitu/salesforce-revenue-cloud-skills --skill enable-advance-configurator revenue-cloud-config-apis revenue-cloud-pricing-apis revenue-cloud-txn-management-apis revenue-cloud-decision-table revenue-cloud-pcm revenue-cloud-pricing-diagnostics salesforce-revenue-cloud-pricing
 ```
 
 ```bash
@@ -162,8 +180,8 @@ npx rcaskills add arohitu/salesforce-revenue-cloud-skills --list
 
 Behavior:
 
-- Prompts for install target: project `./.agent/skills` or global `~/.agent/skills`.
-- Creates `.agent/skills` if missing.
+- Prompts for install target: project `./.agents/skills` or global `~/.agents/skills`.
+- Creates `.agents/skills` if missing.
 - Interactive multi-select supports arrow keys to navigate, spacebar to select, and enter to install.
 - Defaults to all skills selected when `--skill` is not provided.
 
@@ -180,6 +198,7 @@ For Cursor, a project-local skill can live under:
 ```text
 .cursor/skills/revenue-cloud-config-apis/
 .cursor/skills/revenue-cloud-pricing-apis/
+.cursor/skills/revenue-cloud-txn-management-apis/
 .cursor/skills/revenue-cloud-decision-table/
 .cursor/skills/enable-advance-configurator/
 .cursor/skills/revenue-cloud-pricing-diagnostics/
@@ -197,6 +216,7 @@ From your project root:
 mkdir -p .cursor/skills
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-config-apis .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-pricing-apis .cursor/skills/
+cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-txn-management-apis .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-decision-table .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/enable-advance-configurator .cursor/skills/
 cp -R /path/to/salesforce-revenue-cloud-skills/skills/revenue-cloud-pricing-diagnostics .cursor/skills/
@@ -265,6 +285,14 @@ My pricing REST call returns 200 but some line items have no price. Pull the exe
 ```
 
 ```text
+Place this quote over the Revenue Cloud REST API with pricing and tax, then check the tracker id for async errors.
+```
+
+```text
+Amend this usage asset to add 5 licenses via the Transaction Management API and tell me which permission set I need.
+```
+
+```text
 Find the Decision Table used for volume discounting and invoke it with the quote's product and quantity inputs.
 ```
 
@@ -285,6 +313,8 @@ For pricing diagnostics, the agent should produce a concise lineage report showi
 For PCM work, the agent should ground recommendations in the relevant core objects, relationships, effective dates, qualification rules, bundle structure, migration load order, and org/API-version constraints.
 
 For Product Configurator API work, the agent should use the bundled payloads and script, respect the v67.0 minimum API version, and distinguish `transactionId` from `contextId` when calling load, configure, node, quantity, and rules resources.
+
+For Transaction Management API work, the agent should select the right resource (favoring `place-sales-transaction` over the deprecated place-order/place-quote), build a valid object graph, treat Place Sales Transaction as asynchronous by checking the tracker id via `sales-transaction-errors`, and persist ramp-deal changes by passing the returned context id to `place-sales-transaction`.
 
 For Decision Table work, the agent should identify the table Id, build a valid `conditionsList` payload, invoke the lookup API, and report `outcomeList` values and errors.
 
@@ -325,6 +355,18 @@ For pricing diagnostics, `SKILL.md` stays focused on the default workflow, refer
 │   │   │   └── evals.json
 │   │   └── scripts/
 │   │       └── call-pricing-apis.sh
+│   ├── revenue-cloud-txn-management-apis/
+│   │   ├── SKILL.md
+│   │   ├── references/
+│   │   │   └── resources.md
+│   │   ├── payloads/
+│   │   │   ├── place-sales-transaction.json
+│   │   │   ├── amend.json
+│   │   │   └── ...
+│   │   ├── evals/
+│   │   │   └── evals.json
+│   │   └── scripts/
+│   │       └── call-txn-management-apis.sh
 │   ├── enable-advance-configurator/
 │   │   ├── SKILL.md
 │   │   ├── references/
